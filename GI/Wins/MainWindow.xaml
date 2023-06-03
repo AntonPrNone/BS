@@ -1,0 +1,624 @@
+﻿<Window x:Class="GI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GI"
+        mc:Ignorable="d"
+        WindowStyle="None" AllowsTransparency="True" Width="1280" Height="800" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowin.png" Closed="Window_Closed" Loaded="Window_Loaded" Title="Brawl Stars | Encyclopedia of Characters" ResizeMode="NoResize" MinWidth="1000">
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation From="0" To="1" Duration="0:0:0.3" Storyboard.TargetProperty="Opacity"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Window.Resources>
+        <!-- Ресурсы для изображений -->
+        <BitmapImage x:Key="MinimizeIcon" UriSource="/imgs/minimize.png" />
+        <BitmapImage x:Key="MaximizeIcon" UriSource="/imgs/expand.png" />
+        <BitmapImage x:Key="CloseIcon" UriSource="/imgs/close.png" />
+
+        <!-- Стили для кнопок -->
+        <Style TargetType="Button" x:Key="WindowButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle x:Name="ButtonBackground" Fill="{TemplateBinding Background}" RadiusX="5" RadiusY="5"/>
+                            <Image x:Name="ButtonIcon" Source="{TemplateBinding Tag}" Margin="5" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBackground" Property="Fill" Value="#444444"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBackground" Property="Fill" Value="#222222"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#555555"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="WindowTitle">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" Margin="0,0,-4,0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10,10,0,0">
+                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#343434"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#4B4B4D"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#343434"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#656565"/>
+                                <Setter Property="Foreground" Value="#656565"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Storyboard x:Key="ClosingAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3"/>
+        </Storyboard>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <Style x:Key="TextBoxStyleCornerRadius" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" SnapsToDevicePixels="True" CornerRadius="10,10,10,10" BorderThickness="2,2,2,2">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black"/>
+                                    <GradientStop Color="#FFB44CFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="0" MouseDown="OnMouseLeftButtonDown">
+        <Border Width="auto" Height="auto" BorderThickness="3"
+                CornerRadius="5,40,5,40">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                            <RotateTransform Angle="270" CenterY="0.5" CenterX="0.5"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="Black" Offset="0.75"/>
+                    <GradientStop Color="#FF775700" Offset="0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,0.5" StartPoint="0.4,0">
+                    <GradientStop Color="Black" Offset="0.75"/>
+                    <GradientStop Color="#FF775700" Offset="0"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <Border>
+                    <Grid Grid.Row="0" VerticalAlignment="Center" Height="40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="410"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Image Source="/imgs/icowin.png" />
+                            <TextBlock Style="{StaticResource WindowTitle}" Margin="5,0,0,0">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="1" BlurRadius="0" Color="Black" RenderingBias="Performance"/>
+                                </TextBlock.Effect>
+                                <Run Text="Brawl Stars " FontWeight="Bold" FontSize="24">
+                                    <Run.Foreground>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <LinearGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5"/>
+                                                    <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                    <RotateTransform Angle="-25" CenterY="0.5" CenterX="0.5"/>
+                                                    <TranslateTransform/>
+                                                </TransformGroup>
+                                            </LinearGradientBrush.RelativeTransform>
+                                            <GradientStop Color="Black" Offset="1"/>
+                                            <GradientStop Color="#FFFFF500" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Run.Foreground>
+                                </Run>
+                                <Run Text="|" Foreground="#FFFDFF00" FontWeight="Bold" FontSize="18"/>
+                                <Run Text=" Encyclopedia of Characters"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Image Source="/imgs/Search.png" Width="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" Height="30"/>
+                            <TextBox  Style="{DynamicResource TextBoxStyleCornerRadius}" x:Name="Search_TextBox" Grid.Column="0" VerticalContentAlignment="Center" Height="25" VerticalAlignment="Center" Margin="5,10,0,0" HorizontalAlignment="Left" MinWidth="192" TextChanged="TextBox_TextChanged" Padding="10,0,0,0" Foreground="White" CaretBrush="#FFB44CFF"/>
+                        </StackPanel>
+
+                        <ComboBox x:Name="Sort_ComboBox" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,10,0" Foreground="#FF867B00" FontWeight="Bold" FontSize="16" Cursor="Hand">
+                            <ComboBoxItem Content="По имени ↑" />
+                            <ComboBoxItem Content="По имени ↓" />
+                            <ComboBoxItem Content="По редкости ↑" />
+                            <ComboBoxItem Content="По редкости ↓" />
+                            <ComboBoxItem Content="По классу" />
+                        </ComboBox>
+
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right" Margin="0,0,10,0">
+                            <Image Source="/imgs/user.png" Margin="0,5,5,0"/>
+                            <TextBlock x:Name="Username_TextBlock" Margin="0,5,10,0" Text="Антон" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Background="Black" Foreground="White"/>
+                            <Image Source="/imgs/exitColor.png" Margin="0,5,10,0" Width="30" Height="30" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
+                            <Button x:Name="MinimizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MinimizeIcon}" Click="MinimizeButton_Click" Margin="5,5,0,5"/>
+                            <Button x:Name="CloseButton" Style="{StaticResource WindowButton}" Tag="{StaticResource CloseIcon}" Click="CloseButton_Click" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="1" Panel.ZIndex="0">
+                    <Grid.Background>
+                        <ImageBrush/>
+                    </Grid.Background>
+                    <Canvas Width="60" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,35" Panel.ZIndex="999">
+                        <Ellipse x:Name="LoadingCircle" Width="60" Height="60" Fill="#00000000" StrokeThickness="5" StrokeDashArray="0.5 1.5" StrokeDashCap="Round" StrokeEndLineCap="Square" Visibility="Collapsed" Opacity="0">
+                            <Ellipse.Stroke>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black" Offset="0"/>
+                                    <GradientStop Color="Red" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Ellipse.Stroke>
+                            <Ellipse.RenderTransform>
+                                <RotateTransform x:Name="rotateTransform" CenterX="20" CenterY="20" Angle="0" />
+                            </Ellipse.RenderTransform>
+                        </Ellipse>
+                        <Canvas.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetName="rotateTransform" Storyboard.TargetProperty="Angle" By="360" Duration="0:0:1" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Canvas.Triggers>
+                    </Canvas>
+                    <TextBlock x:Name="Ldg_TextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe UI Black" Width="93" FontSize="16" Padding="5,5,0,5" Margin="0,0,5,0" Panel.ZIndex="999" Foreground="White" Text="Загрузка данных..." TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Opacity="0"/>
+                    <TabControl Name="TabControl" TabStripPlacement="Top" VerticalAlignment="Center" OpacityMask="Black" BorderBrush="#00ACACAC" SelectionChanged="TabControl_SelectionChanged" Height="714">
+                        <TabControl.Background>
+                            <ImageBrush x:Name="TabContolBG" ImageSource="/imgs/BG/bg2.jpg" TileMode="None" Stretch="UniformToFill" ViewboxUnits="RelativeToBoundingBox" ViewportUnits="RelativeToBoundingBox" AlignmentX="Center" AlignmentY="Center"/>
+                        </TabControl.Background>
+                        <TabItem x:Name="TabItem1" Header="Персонажи">
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                <ItemsControl x:Name="ItemsContolList" ItemsSource="{Binding Characters}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="5"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Canvas Margin="10" MinHeight="172" MinWidth="154">
+                                                    <Border BorderThickness="2,2,2,2" UseLayoutRounding="True" BorderBrush="Black">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="Black"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Начальный">
+                                                                        <Setter Property="Background" Value="#FF00CAFF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Редкий">
+                                                                        <Setter Property="Background" Value="Lime"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Сверхредкий">
+                                                                        <Setter Property="Background" Value="#FF0061FF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Эпический">
+                                                                        <Setter Property="Background" Value="#FF8800FF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Мифический">
+                                                                        <Setter Property="Background" Value="Red"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Легендарный">
+                                                                        <Setter Property="Background" Value="#FFFFDE00"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Хроматический">
+                                                                        <Setter Property="Background">
+                                                                            <Setter.Value>
+                                                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                                    <LinearGradientBrush.RelativeTransform>
+                                                                                        <TransformGroup>
+                                                                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                                                                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                                                            <RotateTransform Angle="135" CenterY="0.5" CenterX="0.5"/>
+                                                                                            <TranslateTransform/>
+                                                                                        </TransformGroup>
+                                                                                    </LinearGradientBrush.RelativeTransform>
+                                                                                    <GradientStop Offset="0.666" Color="Red"/>
+                                                                                    <GradientStop Color="#FFF1FF00" Offset="0"/>
+                                                                                    <GradientStop Color="#FFB700FF" Offset="1"/>
+                                                                                    <GradientStop Color="#FFFE9F06" Offset="0.333"/>
+                                                                                </LinearGradientBrush>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <Image x:Name="pers" Source="{Binding PhotoIco}" Width="150" Height="137" Stretch="UniformToFill" MaxWidth="150" MaxHeight="137"/>
+                                                    </Border>
+                                                    <TextBlock x:Name="NameBinding_TextBlock" Text="{Binding Name}" Canvas.Top="122" Foreground="White" FontSize="14" Margin="3,0,0,0">
+                                                        <TextBlock.Effect>
+                                                            <DropShadowEffect Color="Black" Direction="0" ShadowDepth="1" BlurRadius="1" RenderingBias="Performance"/>
+                                                        </TextBlock.Effect>
+                                                    </TextBlock>
+                                                    <StackPanel Orientation="Horizontal" Canvas.Left="91" Canvas.Top="119">
+                                                        <TextBlock Text="СИЛА" Canvas.Left="51" Foreground="#FFA5A5A5" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="40" FontSize="12">
+                                                            <TextBlock.Effect>
+                                                                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="1" RenderingBias="Performance" BlurRadius="1"/>
+                                                            </TextBlock.Effect>
+                                                        </TextBlock>
+                                                        <Border Background="Black" HorizontalAlignment="Left" CornerRadius="10,0,0,0" BorderBrush="Black">
+                                                            <TextBlock Text="11" Canvas.Left="0" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" Padding="3,3,3,0"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <Image Source="/imgs/MaxLvl.jpg" Width="154" Height="35" VerticalAlignment="Center" Canvas.Top="137" Canvas.Left="0" HorizontalAlignment="Left"/>
+                                                </Canvas>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </TabItem>
+                        <TabItem Header="Неиграбельные">
+                            <ListBox x:Name="listBox2" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
+                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0" Cursor=""/>
+                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Category}" Foreground="White" />
+                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
+                                                    <Border.BorderBrush>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
+                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.BorderBrush>
+                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </TabItem>
+
+                        <TabItem Header="Избранное">
+                            <ListBox x:Name="listBox3" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
+                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0"/>
+                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Category}" Foreground="White" />
+                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
+                                                    <Border.BorderBrush>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
+                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.BorderBrush>
+                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                </Border>
+                                                <Grid Margin="0,10,0,0">
+                                                    <!-- Первая таблица -->
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
+                                                            <TextBlock Text="Элемент" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="Редкость" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="2" Padding="5,5,5,5">
+                                                            <TextBlock Text="Регион" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,0,10">
+                                                            <TextBlock Text="Оружие" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+
+                                                        <Border BorderBrush="#FFB44CFF" Grid.Column="1" BorderThickness="1" Padding="5,5,5,5" CornerRadius="0,10,0,0">
+                                                            <TextBlock Text="{Binding Element}" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe Print"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="{Binding Rarity}"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">
+                                                                <TextBlock.Foreground>
+                                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                        <GradientStop Color="#FFF1FF00"/>
+                                                                        <GradientStop Color="#FFFFC700" Offset="1"/>
+                                                                    </LinearGradientBrush>
+                                                                </TextBlock.Foreground>
+                                                            </TextBlock>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" MaxWidth="120">
+                                                            <TextBlock Text="{Binding Region}" Foreground="#FFFF6900"  HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,10,0">
+                                                            <TextBlock Text="{Binding Weapon}"  HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF00CFD4"/>
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <!-- Вторая таблица -->
+                                                    <Grid Grid.Column="1" Margin="300,20,0,0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
+                                                            <TextBlock Text="Здоровье (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="Атака (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" Grid.Row="2" CornerRadius="0,0,0,10">
+                                                            <TextBlock Text="Защита (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="0" Padding="5,5,5,5" CornerRadius="0,10,0,0">
+                                                            <TextBlock Text="{Binding Stats.Health}" Foreground="Lime"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="{Binding Stats.Attack}" Foreground="Red"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" CornerRadius="0,0,10,0">
+                                                            <TextBlock Text="{Binding Stats.Defense}" Foreground="#FF5050FF"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                    </Grid>
+                                                </Grid>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                        </TabItem>
+                        <TabItem Header="Добавление">
+                            <!-- Содержимое вкладки -->
+                            <Grid x:Name="AddGrid" VerticalAlignment="Center" Margin="10,10,10,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="Name:" Grid.Row="0" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Name}"/>
+
+                                <TextBlock Text="Class:" Grid.Row="1" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="classTextBox" Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Class}"/>
+
+                                <TextBlock Text="Description:" Grid.Row="2" Grid.Column="0" Margin="5" TextWrapping="Wrap"/>
+                                <TextBox x:Name="descriptionTextBox" Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Description}" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                                <TextBlock Text="Rarity:" Grid.Row="3" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="rarityTextBox" Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding Rarity}"/>
+
+                                <TextBlock Text="Health:" Grid.Row="4" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="healthTextBox" Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Stats.Health}"/>
+
+                                <TextBlock Text="Attack Name:" Grid.Row="5" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="attackNameTextBox" Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackName}"/>
+
+                                <TextBlock Text="Attack Description:" Grid.Row="6" Grid.Column="0" Margin="5" TextWrapping="Wrap"/>
+                                <TextBox x:Name="attackDescriptionTextBox" Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackDescription}" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                                <TextBlock Text="Attack Value:" Grid.Row="7" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="attackValueTextBox" Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackValue}"/>
+
+                                <TextBlock Text="Attack Distance:" Grid.Row="8" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="attackDistanceTextBox" Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackDistance}"/>
+
+                                <TextBlock Text="Attack Speed:" Grid.Row="9" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="attackSpeedTextBox" Grid.Row="9" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackSpeed}"/>
+
+                                <TextBlock Text="AttackAdditionalItemName:" Grid.Row="10" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="attackAdditionalItemNameTextBox" Grid.Row="10" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackAdditionalItemName}"/>
+
+                                <TextBlock Text="AttackAdditionalItemValue:" Grid.Row="11" Grid.Column="0" Margin="5"/>
+                                <TextBox x:Name="attackAdditionalItemValueTextBox" Grid.Row="11" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackAdditionalItemValue}"/>
+
+                                <TextBlock Text="SuperAttackName:" Grid.Row="0" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="superAttackNameTextBox" Grid.Row="0" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackName}"/>
+
+                                <TextBlock Text="SuperAttackDescription:" Grid.Row="1" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="superAttackDescriptionTextBox" Grid.Row="1" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackDescription}"/>
+
+                                <TextBlock Text="SuperAttackValue:" Grid.Row="2" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="superAttackValueTextBox" Grid.Row="2" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackValue}"/>
+
+                                <TextBlock Text="SuperAttackDistance:" Grid.Row="3" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="superAttackDistanceTextBox" Grid.Row="3" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackDistance}"/>
+
+                                <TextBlock Text="SuperAttackAdditionalItemName:" Grid.Row="4" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="superAttackAdditionalItemNameTextBox" Grid.Row="4" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackAdditionalItemName}"/>
+
+                                <TextBlock Text="SuperAttackAdditionalItemValue:" Grid.Row="5" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="superAttackAdditionalItemValueTextBox" Grid.Row="5" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackAdditionalItemValue}"/>
+
+
+                                <TextBlock Text="CompanionHealth:" Grid.Row="6" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="CompanionHealthTextBox" Grid.Row="6" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionHealth}"/>
+
+                                <TextBlock Text="CompanionAttack:" Grid.Row="7" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="CompanionAttackTextBox" Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionAttack}"/>
+
+                                <TextBlock Text="CompanionSpeed:" Grid.Row="8" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="CompanionSpeedTextBox" Grid.Row="8" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionSpeed}"/>
+
+                                <TextBlock Text="CompanionDistance:" Grid.Row="9" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="CompanionDistanceTextBox" Grid.Row="9" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionDistance}"/>
+
+                                <TextBlock Text="Feature:" Grid.Row="10" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="featureTextBox" Grid.Row="10" Grid.Column="3" Margin="5" Text="{Binding Stats.Feature}"/>
+
+                                <TextBlock Text="Speed:" Grid.Row="11" Grid.Column="2" Margin="5"/>
+                                <TextBox x:Name="SpeedTextBox" Grid.Row="11" Grid.Column="3" Margin="5" Text="{Binding Stats.Speed}"/>
+
+                                <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="4" Content="Add" Click="AddButton_ClickAsync" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                    <!-- Тут можно добавить свой контент -->
+                </Grid>
+                <Border Grid.Row="2" VerticalAlignment="Bottom" Height="40">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">
+                            <TextBlock Text="Copyright © 2023 AntonPr" Foreground="White"/>
+                            <TextBlock Text=" | " Foreground="White"/>
+                            <TextBlock Text="Version 1.0.2" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Cursor="Hand" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown">
+                            <Image Source="/imgs/iconReplace.png" Width="30" Height="30" Margin="0,0,-5,0"/>
+                            <Image Source="/imgs/iconImg.png" Width="40" Height="39" Margin="0,0,5,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
