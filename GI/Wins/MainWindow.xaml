@@ -143,6 +143,115 @@
                 </MultiTrigger>
             </Style.Triggers>
         </Style>
+        <SolidColorBrush x:Key="TextBox.Static.Border1" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border1" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border1" Color="#FF569DE5"/>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Padding" Value="5, 0, 5, 0"/>
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border1}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True" CornerRadius="10,10,10,10" Background="#7FFFFFFF" BorderBrush="#FF3A6CFF">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border1}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border1}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="ButtonStyleAdd" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" CornerRadius="10,10,10,10" Background="#BF004AFF" BorderBrush="#FF003EFF">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="Blue"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TextBlockStyleAdd" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="TextTrimming" Value="None"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="5" ShadowDepth="5" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="0" MouseDown="OnMouseLeftButtonDown">
@@ -262,7 +371,7 @@
                     <TextBlock x:Name="Ldg_TextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe UI Black" Width="93" FontSize="16" Padding="5,5,0,5" Margin="0,0,5,0" Panel.ZIndex="999" Foreground="White" Text="Загрузка данных..." TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Opacity="0"/>
                     <TabControl Name="TabControl" TabStripPlacement="Top" VerticalAlignment="Center" OpacityMask="Black" BorderBrush="#00ACACAC" SelectionChanged="TabControl_SelectionChanged" Height="714">
                         <TabControl.Background>
-                            <ImageBrush x:Name="TabContolBG" ImageSource="/imgs/BG/bg2.jpg" TileMode="None" Stretch="UniformToFill" ViewboxUnits="RelativeToBoundingBox" ViewportUnits="RelativeToBoundingBox" AlignmentX="Center" AlignmentY="Center"/>
+                            <ImageBrush x:Name="TabContolBG" ImageSource="/imgs/BG/bg1.jpg" TileMode="None" Stretch="UniformToFill" ViewboxUnits="RelativeToBoundingBox" ViewportUnits="RelativeToBoundingBox" AlignmentX="Center" AlignmentY="Center"/>
                         </TabControl.Background>
                         <TabItem x:Name="TabItem1" Header="Персонажи">
                             <ScrollViewer VerticalScrollBarVisibility="Hidden">
@@ -347,7 +456,7 @@
                                 </ItemsControl>
                             </ScrollViewer>
                         </TabItem>
-                        <TabItem Header="Неиграбельные">
+                        <TabItem Header="Концепты">
                             <ListBox x:Name="listBox2" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -356,7 +465,7 @@
                                             <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
-                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
+                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand"/>
                                                 </StackPanel>
                                                 <TextBlock Text="{Binding Category}" Foreground="White" />
                                                 <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
@@ -375,227 +484,141 @@
                             </ListBox>
                         </TabItem>
 
-                        <TabItem Header="Избранное">
-                            <ListBox x:Name="listBox3" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
-                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0"/>
-                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
-                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
-                                                </StackPanel>
-                                                <TextBlock Text="{Binding Category}" Foreground="White" />
-                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
-                                                    <Border.BorderBrush>
-                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
-                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
-                                                        </LinearGradientBrush>
-                                                    </Border.BorderBrush>
-                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
-                                                </Border>
-                                                <Grid Margin="0,10,0,0">
-                                                    <!-- Первая таблица -->
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
-
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
-                                                            <TextBlock Text="Элемент" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
-                                                            <TextBlock Text="Редкость" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="2" Padding="5,5,5,5">
-                                                            <TextBlock Text="Регион" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,0,10">
-                                                            <TextBlock Text="Оружие" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-
-                                                        <Border BorderBrush="#FFB44CFF" Grid.Column="1" BorderThickness="1" Padding="5,5,5,5" CornerRadius="0,10,0,0">
-                                                            <TextBlock Text="{Binding Element}" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe Print"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
-                                                            <TextBlock Text="{Binding Rarity}"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">
-                                                                <TextBlock.Foreground>
-                                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                                        <GradientStop Color="#FFF1FF00"/>
-                                                                        <GradientStop Color="#FFFFC700" Offset="1"/>
-                                                                    </LinearGradientBrush>
-                                                                </TextBlock.Foreground>
-                                                            </TextBlock>
-                                                        </Border>
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" MaxWidth="120">
-                                                            <TextBlock Text="{Binding Region}" Foreground="#FFFF6900"  HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,10,0">
-                                                            <TextBlock Text="{Binding Weapon}"  HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF00CFD4"/>
-                                                        </Border>
-                                                    </Grid>
-
-                                                    <!-- Вторая таблица -->
-                                                    <Grid Grid.Column="1" Margin="300,20,0,0">
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                            <RowDefinition Height="Auto" />
-                                                        </Grid.RowDefinitions>
-
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                            <ColumnDefinition Width="Auto" />
-                                                        </Grid.ColumnDefinitions>
-
-                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
-                                                            <TextBlock Text="Здоровье (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                        </Border>
-                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
-                                                            <TextBlock Text="Атака (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                        </Border>
-                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" Grid.Row="2" CornerRadius="0,0,0,10">
-                                                            <TextBlock Text="Защита (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                        </Border>
-
-                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="0" Padding="5,5,5,5" CornerRadius="0,10,0,0">
-                                                            <TextBlock Text="{Binding Stats.Health}" Foreground="Lime"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
-                                                            <TextBlock Text="{Binding Stats.Attack}" Foreground="Red"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
-                                                        </Border>
-                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" CornerRadius="0,0,10,0">
-                                                            <TextBlock Text="{Binding Stats.Defense}" Foreground="#FF5050FF"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
-                                                        </Border>
-                                                    </Grid>
-                                                </Grid>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-
-                        </TabItem>
                         <TabItem Header="Добавление">
                             <!-- Содержимое вкладки -->
-                            <Grid x:Name="AddGrid" VerticalAlignment="Center" Margin="10,10,10,10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="2*"/>
-                                </Grid.ColumnDefinitions>
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden" Cursor="Arrow">
+                                <Grid x:Name="AddGrid" VerticalAlignment="Center" Margin="10,10,10,10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.2*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="Name:" Grid.Row="0" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Name}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Имя:" Grid.Row="0" Grid.Column="0" Margin="5"/>
+                                    <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Name}" LostFocus="nameTextBox_LostFocus"/>
 
-                                <TextBlock Text="Class:" Grid.Row="1" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="classTextBox" Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Class}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Класс:" Grid.Row="1" Grid.Column="0" Margin="5"/>
+                                    <TextBox x:Name="classTextBox" Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Class}"/>
 
-                                <TextBlock Text="Description:" Grid.Row="2" Grid.Column="0" Margin="5" TextWrapping="Wrap"/>
-                                <TextBox x:Name="descriptionTextBox" Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Description}" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Описание" Grid.Row="2" Grid.Column="0" Margin="5" TextWrapping="Wrap"/>
+                                    <TextBox x:Name="descriptionTextBox" Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Description}" TextWrapping="Wrap"/>
 
-                                <TextBlock Text="Rarity:" Grid.Row="3" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="rarityTextBox" Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding Rarity}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Редкость" Grid.Row="3" Grid.Column="0" Margin="5"/>
+                                    <TextBox x:Name="rarityTextBox" Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding Rarity}"/>
 
-                                <TextBlock Text="Health:" Grid.Row="4" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="healthTextBox" Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Stats.Health}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Здоровье:" Grid.Row="4" Grid.Column="0" Margin="5" Foreground="Lime"/>
+                                    <TextBox x:Name="healthTextBox" Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Stats.Health}"/>
 
-                                <TextBlock Text="Attack Name:" Grid.Row="5" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="attackNameTextBox" Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackName}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Скорость движения:" Grid.Row="5" Grid.Column="0" Margin="5" Foreground="Lime"/>
+                                    <TextBox x:Name="SpeedTextBox" Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding Stats.Speed}"/>
 
-                                <TextBlock Text="Attack Description:" Grid.Row="6" Grid.Column="0" Margin="5" TextWrapping="Wrap"/>
-                                <TextBox x:Name="attackDescriptionTextBox" Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackDescription}" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Название атаки:" Grid.Row="6" Grid.Column="0" Margin="5" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackNameTextBox" Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackName}"/>
 
-                                <TextBlock Text="Attack Value:" Grid.Row="7" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="attackValueTextBox" Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackValue}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Описание атаки:" Grid.Row="7" Grid.Column="0" Margin="5" TextWrapping="Wrap" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackDescriptionTextBox" Grid.Row="7" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackDescription}" TextWrapping="Wrap"/>
 
-                                <TextBlock Text="Attack Distance:" Grid.Row="8" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="attackDistanceTextBox" Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackDistance}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Значение атаки:" Grid.Row="8" Grid.Column="0" Margin="5" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackValueTextBox" Grid.Row="8" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackValue}"/>
 
-                                <TextBlock Text="Attack Speed:" Grid.Row="9" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="attackSpeedTextBox" Grid.Row="9" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackSpeed}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Дальность атаки:" Grid.Row="9" Grid.Column="0" Margin="5" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackDistanceTextBox" Grid.Row="9" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackDistance}"/>
 
-                                <TextBlock Text="AttackAdditionalItemName:" Grid.Row="10" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="attackAdditionalItemNameTextBox" Grid.Row="10" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackAdditionalItemName}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Скорость перезарядки атаки:" Grid.Row="10" Grid.Column="0" Margin="5,5,0,5" FontSize="16" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackSpeedTextBox" Grid.Row="10" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackSpeed}"/>
 
-                                <TextBlock Text="AttackAdditionalItemValue:" Grid.Row="11" Grid.Column="0" Margin="5"/>
-                                <TextBox x:Name="attackAdditionalItemValueTextBox" Grid.Row="11" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackAdditionalItemValue}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Название доп. атаки:" Grid.Row="11" Grid.Column="0" Margin="5" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackAdditionalItemNameTextBox" Grid.Row="11" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackAdditionalItemName}"/>
 
-                                <TextBlock Text="SuperAttackName:" Grid.Row="0" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="superAttackNameTextBox" Grid.Row="0" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackName}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Значение доп. атаки:" Grid.Row="12" Grid.Column="0" Margin="5" Foreground="#FFFF4949"/>
+                                    <TextBox x:Name="attackAdditionalItemValueTextBox" Grid.Row="12" Grid.Column="1" Margin="5" Text="{Binding Stats.AttackAdditionalItemValue}"/>
 
-                                <TextBlock Text="SuperAttackDescription:" Grid.Row="1" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="superAttackDescriptionTextBox" Grid.Row="1" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackDescription}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Название суператаки:" Grid.Row="0" Grid.Column="2" Margin="5" Foreground="#FFFFA400"/>
+                                    <TextBox x:Name="superAttackNameTextBox" Grid.Row="0" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackName}"/>
 
-                                <TextBlock Text="SuperAttackValue:" Grid.Row="2" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="superAttackValueTextBox" Grid.Row="2" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackValue}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Описание суператаки:" Grid.Row="1" Grid.Column="2" Margin="5" Foreground="#FFFFA400"/>
+                                    <TextBox x:Name="superAttackDescriptionTextBox" Grid.Row="1" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackDescription}" TextWrapping="Wrap"/>
 
-                                <TextBlock Text="SuperAttackDistance:" Grid.Row="3" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="superAttackDistanceTextBox" Grid.Row="3" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackDistance}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Значение суператаки:" Grid.Row="2" Grid.Column="2" Margin="5" Foreground="#FFFFA400"/>
+                                    <TextBox x:Name="superAttackValueTextBox" Grid.Row="2" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackValue}"/>
 
-                                <TextBlock Text="SuperAttackAdditionalItemName:" Grid.Row="4" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="superAttackAdditionalItemNameTextBox" Grid.Row="4" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackAdditionalItemName}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Дальность суператаки:" Grid.Row="3" Grid.Column="2" Margin="5" Foreground="#FFFFA400"/>
+                                    <TextBox x:Name="superAttackDistanceTextBox" Grid.Row="3" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackDistance}"/>
 
-                                <TextBlock Text="SuperAttackAdditionalItemValue:" Grid.Row="5" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="superAttackAdditionalItemValueTextBox" Grid.Row="5" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackAdditionalItemValue}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Название доп. суператаки:" Grid.Row="4" Grid.Column="2" Margin="5" Foreground="#FFFFA400"/>
+                                    <TextBox x:Name="superAttackAdditionalItemNameTextBox" Grid.Row="4" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackAdditionalItemName}"/>
 
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Значение доп. суператаки:" Grid.Row="5" Grid.Column="2" Margin="5" Foreground="#FFFFA400"/>
+                                    <TextBox x:Name="superAttackAdditionalItemValueTextBox" Grid.Row="5" Grid.Column="3" Margin="5" Text="{Binding Stats.SuperAttackAdditionalItemValue}"/>
 
-                                <TextBlock Text="CompanionHealth:" Grid.Row="6" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="CompanionHealthTextBox" Grid.Row="6" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionHealth}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Здоровье компаньона:" Grid.Row="6" Grid.Column="2" Margin="5" Foreground="#FFFF5D00"/>
+                                    <TextBox x:Name="CompanionHealthTextBox" Grid.Row="6" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionHealth}"/>
 
-                                <TextBlock Text="CompanionAttack:" Grid.Row="7" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="CompanionAttackTextBox" Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionAttack}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Атака компаньона:" Grid.Row="7" Grid.Column="2" Margin="5" Foreground="#FFFF5D00"/>
+                                    <TextBox x:Name="CompanionAttackTextBox" Grid.Row="7" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionAttack}"/>
 
-                                <TextBlock Text="CompanionSpeed:" Grid.Row="8" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="CompanionSpeedTextBox" Grid.Row="8" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionSpeed}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Скорость ат. компаньона:" Grid.Row="8" Grid.Column="2" Margin="5" Foreground="#FFFF5D00"/>
+                                    <TextBox x:Name="CompanionSpeedTextBox" Grid.Row="8" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionSpeed}"/>
 
-                                <TextBlock Text="CompanionDistance:" Grid.Row="9" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="CompanionDistanceTextBox" Grid.Row="9" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionDistance}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Дальность ат. компаньона:" Grid.Row="9" Grid.Column="2" Margin="5,5,5,5" SnapsToDevicePixels="True" Foreground="#FFFF5D00"/>
+                                    <TextBox x:Name="CompanionDistanceTextBox" Grid.Row="9" Grid.Column="3" Margin="5" Text="{Binding Stats.CompanionDistance}"/>
 
-                                <TextBlock Text="Feature:" Grid.Row="10" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="featureTextBox" Grid.Row="10" Grid.Column="3" Margin="5" Text="{Binding Stats.Feature}"/>
+                                    <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Особенность:" Grid.Row="10" Grid.Column="2" Margin="5" Foreground="#FF89A6FF"/>
+                                    <TextBox x:Name="featureTextBox" Grid.Row="10" Grid.Column="3" Margin="5" Text="{Binding Stats.Feature}" TextWrapping="Wrap"/>
 
-                                <TextBlock Text="Speed:" Grid.Row="11" Grid.Column="2" Margin="5"/>
-                                <TextBox x:Name="SpeedTextBox" Grid.Row="11" Grid.Column="3" Margin="5" Text="{Binding Stats.Speed}"/>
+                                    <StackPanel Grid.Row="11" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Button x:Name="AddImage_Button" Style="{DynamicResource ButtonStyleAdd}" Content="Загрузить изображение бойца" Width="260" Margin="0,0,10,0" Foreground="White" Click="AddImage_Button_Click">
+                                            <Button.Effect>
+                                                <DropShadowEffect/>
+                                            </Button.Effect>
+                                        </Button>
+                                        <TextBox x:Name="ImagePathTextBox" MinWidth="200" MaxWidth="350"/>
+                                    </StackPanel>
 
-                                <Button Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="4" Content="Add" Click="AddButton_ClickAsync" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300"/>
-                            </Grid>
+                                    <StackPanel Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Button x:Name="AddImageIco_Button" Style="{DynamicResource ButtonStyleAdd}" Content="Загрузить иконку бойца" Width="260" Margin="0,0,10,0" Foreground="White" Click="AddImageIco_Button_Click">
+                                            <Button.Effect>
+                                                <DropShadowEffect/>
+                                            </Button.Effect>
+                                        </Button>
+                                        <TextBox x:Name="ImageIcoPathTextBox" MinWidth="200" MaxWidth="350"/>
+                                    </StackPanel>
+
+                                    <Button Style="{DynamicResource ButtonStyleAdd}" Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="4" Content="Добавить" Click="AddButton_ClickAsync" HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" BorderBrush="{x:Null}" Foreground="White" Margin="0,20,0,0" Cursor="Hand" Height="30">
+                                        <Button.Effect>
+                                            <DropShadowEffect/>
+                                        </Button.Effect>
+                                    </Button>
+                                    <Button Style="{DynamicResource ButtonStyleAdd}" Grid.Row="19" Grid.Column="0" Grid.ColumnSpan="4" Content="Очистить форму" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" BorderBrush="{x:Null}" Foreground="#FFFF5050" Margin="500,20,0,0" Cursor="Hand" Click="Button_Click">
+                                        <Button.Effect>
+                                            <DropShadowEffect/>
+                                        </Button.Effect>
+                                    </Button>
+                                </Grid>
+                            </ScrollViewer>
                         </TabItem>
                     </TabControl>
                     <!-- Тут можно добавить свой контент -->

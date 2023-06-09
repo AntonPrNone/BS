@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI.Wins"
         mc:Ignorable="d"
-        WindowStyle="None" AllowsTransparency="True" Width="1280" Height="800" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowin.png" Closed="Window_Closed" Loaded="Window_Loaded" Title="Brawl Stars | Encyclopedia of Characters" ResizeMode="NoResize" MinWidth="1000">
+        WindowStyle="None" AllowsTransparency="True" Width="1200" Height="700" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowin.png" Closed="Window_Closed" Loaded="Window_Loaded" Title="Brawl Stars | Encyclopedia of Characters" ResizeMode="NoResize" MinWidth="1000" Top="1" KeyDown="Window_KeyDown">
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
@@ -190,31 +190,175 @@
                     <MediaElement x:Name="BackMedia" Source="./imgs/BG/bgVideo4.mp4" Grid.ColumnSpan="3" IsMuted="True" Stretch="UniformToFill" UnloadedBehavior="Manual" LoadedBehavior="Play" />
                     <Image Source="{Binding Photo}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="500"/>
                     <StackPanel>
-                        <Border Background="Lime" VerticalAlignment="Top" Margin="0,50,0,0" CornerRadius="30,10,10,2" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="300">
+                        <Border x:Name="ColorRarity" VerticalAlignment="Top" Margin="0,50,0,0" CornerRadius="30,10,10,2" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="300">
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="10" BlurRadius="3" Opacity="1"/>
                             </Border.Effect>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="Lime"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Начальный">
+                                            <Setter Property="Background" Value="#FF00CAFF"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Редкий">
+                                            <Setter Property="Background" Value="Lime"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Сверхредкий">
+                                            <Setter Property="Background" Value="#FF0061FF"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Эпический">
+                                            <Setter Property="Background" Value="#FF8800FF"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Мифический">
+                                            <Setter Property="Background" Value="Red"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Легендарный">
+                                            <Setter Property="Background" Value="#FFFFDE00"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Хроматический">
+                                            <Setter Property="Background">
+                                                <Setter.Value>
+                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                        <LinearGradientBrush.RelativeTransform>
+                                                            <TransformGroup>
+                                                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                                                <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                                <RotateTransform Angle="135" CenterY="0.5" CenterX="0.5"/>
+                                                                <TranslateTransform/>
+                                                            </TransformGroup>
+                                                        </LinearGradientBrush.RelativeTransform>
+                                                        <GradientStop Offset="0.666" Color="Red"/>
+                                                        <GradientStop Color="#FFF1FF00" Offset="0"/>
+                                                        <GradientStop Color="#FFB700FF" Offset="1"/>
+                                                        <GradientStop Color="#FFFE9F06" Offset="0.333"/>
+                                                    </LinearGradientBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <StackPanel>
-                                <TextBlock Text="БАРЛИ" TextAlignment="Center" FontSize="30" Padding="100,0,0,0"/>
-                                <TextBlock Text="АРТИЛЛЕРИЯ" TextAlignment="Center" FontSize="18" Margin="0,-5,0,0" Padding="100,0,0,0"/>
+                                <TextBlock Text="{Binding Name}" TextAlignment="Center" FontSize="30" Padding="100,0,0,0"/>
+                                <TextBlock Text="{Binding Class}" TextAlignment="Center" FontSize="18" Margin="0,-5,0,0" Padding="100,0,0,0"/>
                             </StackPanel>
                         </Border>
-                        <TextBlock Text="Редкий" TextAlignment="Right" FontStyle="Italic" Width="300" HorizontalAlignment="Left" Foreground="Lime" FontSize="16" Grid.IsSharedSizeScope="True" Margin="0,-10,0,0">
+                        <TextBlock Text="{Binding Rarity}" TextAlignment="Right" FontStyle="Italic" Width="300" HorizontalAlignment="Left" FontSize="16" Grid.IsSharedSizeScope="True" Margin="0,-10,0,0">
                             <TextBlock.Effect>
                                 <DropShadowEffect ShadowDepth="1" BlurRadius="1" Color="Black" RenderingBias="Performance"/>
                             </TextBlock.Effect>
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="Lime"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Начальный">
+                                            <Setter Property="Foreground" Value="#FF00CAFF"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Редкий">
+                                            <Setter Property="Foreground" Value="Lime"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Сверхредкий">
+                                            <Setter Property="Foreground" Value="#FF0061FF"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Эпический">
+                                            <Setter Property="Foreground" Value="#FF8800FF"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Мифический">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Легендарный">
+                                            <Setter Property="Foreground" Value="#FFFFDE00"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Rarity}" Value="Хроматический">
+                                            <Setter Property="Foreground">
+                                                <Setter.Value>
+                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                        <LinearGradientBrush.RelativeTransform>
+                                                            <TransformGroup>
+                                                                <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                                                <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                                <RotateTransform Angle="135" CenterY="0.5" CenterX="0.5"/>
+                                                                <TranslateTransform/>
+                                                            </TransformGroup>
+                                                        </LinearGradientBrush.RelativeTransform>
+                                                        <GradientStop Offset="0.666" Color="Red"/>
+                                                        <GradientStop Color="#FFF1FF00" Offset="0"/>
+                                                        <GradientStop Color="#FFB700FF" Offset="1"/>
+                                                        <GradientStop Color="#FFFE9F06" Offset="0.333"/>
+                                                    </LinearGradientBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
                         </TextBlock>
                     </StackPanel>
-                    <Border VerticalAlignment="Center" Background="#7F000000" CornerRadius="0,20,20,0" Padding="5,5,5,5" Margin="0,0,10,0">
-                        <TextBlock Text="Барли готовит лучшие напитки в парке Старр! Но стоит только кому-то запачкать барную стойку, как он вскипает и начинает кидаться бутылками!" Foreground="White" FontSize="22" TextWrapping="Wrap" Padding="10,0,0,0">
+                    <Border VerticalAlignment="Center" CornerRadius="20,20,20,20" Padding="5,5,5,5" Margin="10,0,10,0">
+                        <TextBlock Text="{Binding Description}" Foreground="White" FontSize="22" TextWrapping="Wrap" Padding="10,0,0,0">
                             <TextBlock.Effect>
                                 <DropShadowEffect/>
                             </TextBlock.Effect>
                         </TextBlock>
                     </Border>
-
-                    <Border Grid.Column="2">
-                        
+                    
+                    <Border Grid.Column="2" Background="#1900B3FF" VerticalAlignment="Center" Margin="10,0,10,0" CornerRadius="5,5,5,5" MaxWidth="380" Padding="0,0,0,20">
+                        <StackPanel>
+                            <Border VerticalAlignment="Top" Height="50" Background="Black" Margin="10,10,10,10" CornerRadius="5,5,5,5">
+                                <Grid>
+                                    <TextBlock Text="УРОВЕНЬ СИЛЫ 11" Foreground="#FF868686" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <Image Source="/imgs/icoInfo.png" Width="35" Height="35" HorizontalAlignment="Right" Margin="0,0,5,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
+                                </Grid>
+                            </Border>
+                            
+                            <Border HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,20,10,0">
+                                <StackPanel>
+                                    <Border Background="#7F000000" Padding="2,2,2,2" CornerRadius="2,2,2,2" MinWidth="250">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Background="#FFC50000" CornerRadius="2,2,2,2" BorderBrush="Black" BorderThickness="1,1,1,1" MaxWidth="50" MaxHeight="50">
+                                                <Border.Effect>
+                                                    <DropShadowEffect Direction="220"/>
+                                                </Border.Effect>
+                                                <Image Source="/imgs/iconAtack.png" Width="40" Height="40" Margin="3,3,3,0"/>
+                                            </Border>
+                                            <Grid Margin="20,0,20,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="АТАКА" Foreground="#FFFF4949" FontSize="16" Margin="0,-15,0,0" FontWeight="Bold">
+                                                    <TextBlock.Effect>
+                                                        <DropShadowEffect ShadowDepth="2" BlurRadius="0"/>
+                                                    </TextBlock.Effect>
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Stats.AttackName}" Foreground="White" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" MaxWidth="260"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Background="#7F000000" Padding="2,2,2,2" CornerRadius="2,2,2,2" MinWidth="250" Margin="0,20,0,0">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Background="#FFFFA400" CornerRadius="2,2,2,2" BorderBrush="Black" BorderThickness="1,1,1,1" MaxWidth="50" MaxHeight="50">
+                                                <Border.Effect>
+                                                    <DropShadowEffect Direction="220"/>
+                                                </Border.Effect>
+                                                <Image Source="/imgs/iconCherep.png" Width="40" Height="40" Margin="3,3,3,0"/>
+                                            </Border>
+                                            <Grid Margin="20,0,20,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="СУПЕР" Foreground="#FFFFA400" FontSize="16" Margin="0,-15,0,0" FontWeight="Bold">
+                                                    <TextBlock.Effect>
+                                                        <DropShadowEffect ShadowDepth="2" BlurRadius="2"/>
+                                                    </TextBlock.Effect>
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Stats.SuperAttackName}" Foreground="White" FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" MaxWidth="260"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
                     </Border>
                 </Grid>
                 <Border Grid.Row="2" VerticalAlignment="Bottom" Height="40">

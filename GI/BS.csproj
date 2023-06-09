@@ -77,6 +77,9 @@
     <Reference Include="DnsClient, Version=1.6.1.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
       <HintPath>..\packages\DnsClient.1.6.1\lib\net471\DnsClient.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.11.46.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.11.46\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=2.1.2.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.2.1.2\lib\net462\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -199,45 +202,6 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Uno, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Diagnostics.Eventing, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.Diagnostics.Eventing.2.0.1\lib\netstandard2.0\Uno.Diagnostics.Eventing.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Fonts.Fluent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.Fonts.Fluent.2.0.0\lib\netstandard1.0\Uno.Fonts.Fluent.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Foundation, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Foundation.Logging, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.Foundation.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.Composition, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.Composition.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.Dispatching, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.Dispatching.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.FluentTheme, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.FluentTheme.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.FluentTheme.v1, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.FluentTheme.v1.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.FluentTheme.v2, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.FluentTheme.v2.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.UI.Toolkit, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.UI.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="Uno.Xaml, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.4.8.39\lib\netstandard2.0\Uno.Xaml.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -251,12 +215,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Anim.cs" />
+    <Compile Include="PersInfo.xaml.cs">
+      <DependentUpon>PersInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Wins\Pers.xaml.cs">
       <DependentUpon>Pers.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wins\RegWin.xaml.cs">
       <DependentUpon>RegWin.xaml</DependentUpon>
     </Compile>
+    <Page Include="PersInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Wins\AutoLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -334,18 +305,17 @@
     <Resource Include="imgs\Brawl Stars Animation_ Barley%27s Last Call!.mp4" />
     <Resource Include="imgs\iconReplace.png" />
     <Resource Include="imgs\iconImg.png" />
-    <Resource Include="imgs\BG\bg1.jpg" />
+    <Resource Include="imgs\BG\bg9.jpg" />
     <Resource Include="imgs\BG\bg10.jpg" />
     <Resource Include="imgs\BG\bg11.jpg" />
-    <Resource Include="imgs\BG\bg12.jpg" />
     <Resource Include="imgs\BG\bg2.jpg" />
+    <Resource Include="imgs\BG\bg1.jpg" />
     <Resource Include="imgs\BG\bg3.jpg" />
     <Resource Include="imgs\BG\bg4.jpg" />
     <Resource Include="imgs\BG\bg5.jpg" />
-    <Resource Include="imgs\BG\bg6.jpg" />
-    <Resource Include="imgs\BG\bg9.jpg" />
-    <Resource Include="imgs\BG\bg7.jpg" />
     <Resource Include="imgs\BG\bg8.jpg" />
+    <Resource Include="imgs\BG\bg6.jpg" />
+    <Resource Include="imgs\BG\bg7.jpg" />
     <Resource Include="imgs\icowin.png" />
     <Resource Include="imgs\icowin.ico" />
     <Resource Include="icowin.ico" />
@@ -366,6 +336,11 @@
     <EmbeddedResource Include="imgs\BG\bgVideo5.mp4">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Resource Include="imgs\icoInfo.png" />
+    <Resource Include="imgs\iconCherep.png" />
+    <Resource Include="imgs\iconAtack.png" />
+    <Resource Include="imgs\iconHeart.png" />
+    <Resource Include="imgs\icoFeature.png" />
     <Content Include="mongocrypt.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -398,8 +373,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\MongoDB.Libmongocrypt.1.7.0\build\MongoDB.Libmongocrypt.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MongoDB.Libmongocrypt.1.7.0\build\MongoDB.Libmongocrypt.targets'))" />
     <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets'))" />
-    <Error Condition="!Exists('..\packages\Uno.SourceGenerationTasks.4.2.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.SourceGenerationTasks.4.2.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets'))" />
   </Target>
   <Import Project="..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.8.0\build\MaterialDesignThemes.targets')" />
-  <Import Project="..\packages\Uno.SourceGenerationTasks.4.2.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets" Condition="Exists('..\packages\Uno.SourceGenerationTasks.4.2.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" />
 </Project>
