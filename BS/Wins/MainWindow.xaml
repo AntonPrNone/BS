@@ -369,7 +369,7 @@
                         </Canvas.Triggers>
                     </Canvas>
                     <TextBlock x:Name="Ldg_TextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe UI Black" Width="93" FontSize="16" Padding="5,5,0,5" Margin="0,0,5,0" Panel.ZIndex="999" Foreground="White" Text="Загрузка данных..." TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Opacity="0"/>
-                    <TabControl Name="TabControl" TabStripPlacement="Top" VerticalAlignment="Center" OpacityMask="Black" BorderBrush="#00ACACAC" SelectionChanged="TabControl_SelectionChanged" Height="714">
+                    <TabControl Name="TabControl" TabStripPlacement="Top" VerticalAlignment="Center" OpacityMask="Black" BorderBrush="#00ACACAC" Height="714" SelectionChanged="TabControl_SelectionChanged">
                         <TabControl.Background>
                             <ImageBrush x:Name="TabContolBG" ImageSource="/imgs/BG/bg1.jpg" TileMode="None" Stretch="UniformToFill" ViewboxUnits="RelativeToBoundingBox" ViewportUnits="RelativeToBoundingBox" AlignmentX="Center" AlignmentY="Center"/>
                         </TabControl.Background>
@@ -457,31 +457,88 @@
                             </ScrollViewer>
                         </TabItem>
                         <TabItem Header="Концепты">
-                            <ListBox x:Name="listBox2" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
-                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0" Cursor=""/>
-                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
-                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand"/>
-                                                </StackPanel>
-                                                <TextBlock Text="{Binding Category}" Foreground="White" />
-                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
-                                                    <Border.BorderBrush>
-                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
-                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
-                                                        </LinearGradientBrush>
-                                                    </Border.BorderBrush>
-                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
-                                                </Border>
-                                            </StackPanel>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                <ItemsControl x:Name="ItemsContolList2" ItemsSource="{Binding Characters}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="5"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Canvas Margin="10" MinHeight="172" MinWidth="154">
+                                                    <Border BorderThickness="2,2,2,2" UseLayoutRounding="True" BorderBrush="Black">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="Black"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Начальный">
+                                                                        <Setter Property="Background" Value="#FF00CAFF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Редкий">
+                                                                        <Setter Property="Background" Value="Lime"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Сверхредкий">
+                                                                        <Setter Property="Background" Value="#FF0061FF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Эпический">
+                                                                        <Setter Property="Background" Value="#FF8800FF"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Мифический">
+                                                                        <Setter Property="Background" Value="Red"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Легендарный">
+                                                                        <Setter Property="Background" Value="#FFFFDE00"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Rarity}" Value="Хроматический">
+                                                                        <Setter Property="Background">
+                                                                            <Setter.Value>
+                                                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                                    <LinearGradientBrush.RelativeTransform>
+                                                                                        <TransformGroup>
+                                                                                            <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                                                                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                                                            <RotateTransform Angle="135" CenterY="0.5" CenterX="0.5"/>
+                                                                                            <TranslateTransform/>
+                                                                                        </TransformGroup>
+                                                                                    </LinearGradientBrush.RelativeTransform>
+                                                                                    <GradientStop Offset="0.666" Color="Red"/>
+                                                                                    <GradientStop Color="#FFF1FF00" Offset="0"/>
+                                                                                    <GradientStop Color="#FFB700FF" Offset="1"/>
+                                                                                    <GradientStop Color="#FFFE9F06" Offset="0.333"/>
+                                                                                </LinearGradientBrush>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <Image x:Name="pers" Source="{Binding PhotoIco}" Width="150" Height="137" Stretch="UniformToFill" MaxWidth="150" MaxHeight="137"/>
+                                                    </Border>
+                                                    <TextBlock x:Name="NameBinding_TextBlock" Text="{Binding Name}" Canvas.Top="122" Foreground="White" FontSize="14" Margin="3,0,0,0">
+                                                        <TextBlock.Effect>
+                                                            <DropShadowEffect Color="Black" Direction="0" ShadowDepth="1" BlurRadius="1" RenderingBias="Performance"/>
+                                                        </TextBlock.Effect>
+                                                    </TextBlock>
+                                                    <StackPanel Orientation="Horizontal" Canvas.Left="91" Canvas.Top="119">
+                                                        <TextBlock Text="СИЛА" Canvas.Left="51" Foreground="#FFA5A5A5" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="40" FontSize="12">
+                                                            <TextBlock.Effect>
+                                                                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="1" RenderingBias="Performance" BlurRadius="1"/>
+                                                            </TextBlock.Effect>
+                                                        </TextBlock>
+                                                        <Border Background="Black" HorizontalAlignment="Left" CornerRadius="10,0,0,0" BorderBrush="Black">
+                                                            <TextBlock Text="11" Canvas.Left="0" Foreground="White" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" Padding="3,3,3,0"/>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <Image Source="/imgs/MaxLvl.jpg" Width="154" Height="35" VerticalAlignment="Center" Canvas.Top="137" Canvas.Left="0" HorizontalAlignment="Left"/>
+                                                    <Image Source="/imgs/delete.png" Width="30" Height="30" Canvas.Left="120" Canvas.Top="5" MouseRightButtonDown="Image_MouseRightButtonDown" Panel.ZIndex="1"/>
+                                                </Canvas>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </TabItem>
 
                         <TabItem Header="Добавление">
@@ -518,7 +575,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Имя:" Grid.Row="0" Grid.Column="0" Margin="5"/>
-                                    <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Name}" LostFocus="nameTextBox_LostFocus"/>
+                                    <TextBox x:Name="nameTextBox" Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding Name}" LostFocus="NameTextBox_LostFocus"/>
 
                                     <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Класс:" Grid.Row="1" Grid.Column="0" Margin="5"/>
                                     <TextBox x:Name="classTextBox" Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Class}"/>
@@ -530,7 +587,7 @@
                                     <TextBox x:Name="rarityTextBox" Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding Rarity}"/>
 
                                     <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Здоровье:" Grid.Row="4" Grid.Column="0" Margin="5" Foreground="Lime"/>
-                                    <TextBox x:Name="healthTextBox" Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Stats.Health}"/>
+                                    <TextBox x:Name="HealthTextBox" Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding Stats.Health}" PreviewTextInput="HealthTextBox_PreviewTextInput"/>
 
                                     <TextBlock Style="{DynamicResource TextBlockStyleAdd}" Text="Скорость движения:" Grid.Row="5" Grid.Column="0" Margin="5" Foreground="Lime"/>
                                     <TextBox x:Name="SpeedTextBox" Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding Stats.Speed}"/>

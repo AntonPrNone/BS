@@ -11,9 +11,9 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using GI.Wins;
-using HtmlAgilityPack;
 using LogicLibrary;
 using Microsoft.Win32;
+using Path = System.IO.Path;
 
 namespace GI
 {
@@ -22,35 +22,33 @@ namespace GI
     /// </summary>
     public partial class MainWindow : Window
 	{
-        // Создание объекта HtmlWeb для загрузки веб-страницы
-        HtmlWeb htmlWeb = new HtmlWeb();
-        readonly BrawlersManager charactersManager = new BrawlersManager();
+        readonly BrawlersManager brawlersManager = new BrawlersManager();
         readonly ImageManager imageManager = new ImageManager();
         readonly ImageManager imageIcoManager = new ImageManager(directory: "persIco", collectionName: "BrawlersImageIco");
+        readonly ImageManager imageConceptManager = new ImageManager(collectionName: "BrawlersImageConcept");
+        readonly ImageManager imageIcoConceptManager = new ImageManager(directory: "persIco", collectionName: "BrawlersImageIcoConcept");
+
         readonly string directoryPathIco = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BS", "persIco");
         readonly string directoryPathImg = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BS", "pers");
+        string imgPath, imgIcoPath;
         readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "LogPas.txt");
+        readonly List<string> deletePath = new List<string>();
+
         readonly string username;
 		bool initial = true;
-		ListBox listBox;
 		User user;
-		readonly string pathFavEmpty = @"/imgs/favoriteEmpty.png";
-		readonly string pathFav = @"/imgs/favorite.png";
-		readonly ImageSource imageSourceFavEmpty = new BitmapImage(new Uri(@"/imgs/favoriteEmpty.png", UriKind.Relative));
-		readonly ImageSource imageSourceFav = new BitmapImage(new Uri(@"/imgs/favorite.png", UriKind.Relative));
         int currentBackgroundIndex = 0;
         readonly ImageBrush[] backgrounds = new ImageBrush[11];
         List<BrawlersDocument> brawlers;
+        List<BrawlersDocument> conceptBrawlers;
         List<BrawlersDocument> brawlersCopy = new List<BrawlersDocument>();
-        List<BrawlersDocument> brawlersFav;
-        BrawlersManager brawlersManager = new BrawlersManager();
         public MainWindow()
 		{
 			InitializeComponent();
+            ItemsContolList.Opacity = 0;
 			username = File.ReadAllLines(path)[0];
 
 			LoadData();
-
 
             //Заполняем массив изображений
             for (int i = 1; i <= backgrounds.Length; i++)
@@ -62,28 +60,27 @@ namespace GI
         private async Task UpdateData() // Импорт и расставление данных
 		{
             user = await UserManager.GetUserAsync(username);
-            if (user.FavoriteСharacters == null) user.FavoriteСharacters = new List<string>();
+            if (user.ConceptBrawlers == null) user.ConceptBrawlers = new List<string>();
             Username_TextBlock.Text = username;
             brawlers = await brawlersManager.LoadCharacterAsync();
+            conceptBrawlers = await brawlersManager.LoadCharacterAsync(user.ConceptBrawlers);
             await imageManager.LoadImageFromDbAsync();
             await imageIcoManager.LoadImageFromDbAsync();
 
-            if (user.FavoriteСharacters != null)
-            {
-                foreach (string favoriteCharacterName in user.FavoriteСharacters)
-                {
-                    int chr = brawlers.FindIndex(c => c.Name == favoriteCharacterName);
-                    if (chr != -1)
-                    {
-                        brawlers[chr].FavoriteСharacters = pathFav;
-                    }
-                }
-            }
+            await imageConceptManager.LoadImageFromDbAsync();
+            await imageIcoConceptManager.LoadImageFromDbAsync();
 
             foreach (BrawlersDocument brawlersDocument in brawlers)
             {
-                if (brawlersDocument.FavoriteСharacters == null || brawlersDocument.FavoriteСharacters == "")
-                    brawlersDocument.FavoriteСharacters = pathFavEmpty;
+                if (brawlersDocument.Name != null)
+                {
+                    brawlersDocument.PhotoIco = Path.Combine(directoryPathIco, Path.ChangeExtension(brawlersDocument.Name, ".png"));
+                    brawlersDocument.Photo = Path.Combine(directoryPathImg, Path.ChangeExtension(brawlersDocument.Name, ".png"));
+                }
+            }
+
+            foreach (BrawlersDocument brawlersDocument in conceptBrawlers)
+            {
                 if (brawlersDocument.Name != null)
                 {
                     brawlersDocument.PhotoIco = Path.Combine(directoryPathIco, Path.ChangeExtension(brawlersDocument.Name, ".png"));
@@ -92,8 +89,7 @@ namespace GI
             }
 
             ItemsContolList.ItemsSource = brawlers;
-
-            brawlersFav = (List<BrawlersDocument>)(brawlers.Where(brawler => brawler.FavoriteСharacters == pathFav).ToList());
+            ItemsContolList2.ItemsSource = conceptBrawlers;
             brawlersCopy.AddRange(brawlers);
         }
 
@@ -126,38 +122,6 @@ namespace GI
             // Обновление отображаемых данных в ListBox
             ItemsContolList.ItemsSource = filteredCharacters;
         }
-
-		private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) // Смена вкладки
-		{
-			//if (!initial) // Если сейчас не инциализация окна
-			//{
-			//	Search_TextBox.Text = string.Empty;
-			//	var selectedTab = TabControl.SelectedIndex;
-			//	if (selectedTab == 0)
-			//	{
-			//		listBox = listBox1;
-			//		charactersActual = charactersPl;
-			//	}
-
-			//	else if (selectedTab == 1)
-			//	{
-			//		listBox = listBox2;
-			//		charactersActual = charactersNoPl;
-
-			//	}
-
-			//	else if (selectedTab == 2)
-			//	{
-			//		listBox = listBox3;
-			//		charactersActual = charactersFav;
-			//	}
-
-			//	listBox.ItemsSource = charactersActual;
-			//}
-
-			//initial = false;
-		}
-
 
         private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) // Выбор критерия сортировки в ComboBox
         {
@@ -210,7 +174,7 @@ namespace GI
             initial = false;
         }
 
-        // Непользовательское добавление персонажа
+        // Добавление персонажа
         private async void AddButton_ClickAsync(object sender, RoutedEventArgs e)
 		{
             var brs = new BrawlersDocument
@@ -222,7 +186,7 @@ namespace GI
                 Rarity = FormattingValue(rarityTextBox)
             };
 
-            if (healthTextBox.Text != "") brs.Stats.Health = Convert.ToInt32(FormattingValue(healthTextBox));
+            if (HealthTextBox.Text != "") brs.Stats.Health = Convert.ToInt32(FormattingValue(HealthTextBox));
             brs.Stats.AttackName = FormattingValue(attackNameTextBox);
             brs.Stats.AttackDescription = FormattingValue(attackDescriptionTextBox);
             brs.Stats.AttackValue = FormattingValue(attackValueTextBox);
@@ -243,70 +207,169 @@ namespace GI
             brs.Stats.Speed = FormattingValue(SpeedTextBox);
             brs.Stats.Feature = FormattingValue(featureTextBox);
 
-            brs.Category = "Играбельный";
+            brs.Category = "Концепт";
             brs.UploadDate = DateTime.Now;
 
+            if (await brawlersManager.UploadCharacterAsync(brs))
+            {
+                user.ConceptBrawlers.Add(brs.Name);
+                conceptBrawlers.Add(brs);
+            }
+
+            await imageConceptManager.UploadImageAsync(imgPath, brs.Name);
+            await imageIcoConceptManager.UploadImageAsync(imgIcoPath, brs.Name);
+
+            brs.Photo = imgPath;
+            brs.PhotoIco = imgIcoPath;
+            ItemsContolList2.ItemsSource = null;
+            ItemsContolList2.ItemsSource = conceptBrawlers;
+
+            user.ConceptBrawlers = conceptBrawlers.Select(b => b.Name).ToList();
+            await UserManager.ReplaceUserAsync(user);
             await brawlersManager.UploadCharacterAsync(brs);
             Button_Click(null, e);
         }
 
-        private void nameTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {   
-            var brs = new BrawlersDocument();
-            // Загрузка веб-страницы
-            var htmlDocument = htmlWeb.Load($"https://brawlstars.fandom.com/ru/wiki/{nameTextBox.Text}");
-
-            if (htmlDocument != null)
-            {
-                // Используя XPath, извлечение нужных элементов из HTML-документа
-                nameTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"firstHeading\"]/span");
-                rarityTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/div[1]/div");
-                descriptionTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/div[1]/i/b");
-                classTextBox.Text = DataExtraction(htmlDocument, "/html/body/div[4]/div[3]/div[2]/main/div[3]/div[2]/div/p[2]/i[2]");
-                healthTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/section[1]/section[12]/table/tbody/tr/td[2]");
-                attackNameTextBox.Text = DataExtraction(htmlDocument, "//html/body/div[4]/div[3]/div[2]/main/div[3]/div[2]/div/h3[1]/span[2]/b");
-                if (attackNameTextBox.Text != "") attackNameTextBox.Text = attackNameTextBox.Text.Substring(7);
-                attackDescriptionTextBox.Text = DataExtraction(htmlDocument, "/html/body/div[4]/div[3]/div[2]/main/div[3]/div[2]/div/div[5]/i/b");
-                attackValueTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/section[2]/section[12]/table/tbody/tr/td[2]");
-                attackDistanceTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/section[2]/div[1]/div");
-                attackSpeedTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/section[2]/div[2]/div");
-                superAttackNameTextBox.Text = DataExtraction(htmlDocument, "/html/body/div[4]/div[3]/div[2]/main/div[3]/div[2]/div/h3[2]/span[2]/b");
-                if (superAttackNameTextBox.Text != "") superAttackNameTextBox.Text = superAttackNameTextBox.Text.Substring(7);
-                superAttackDescriptionTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/div[7]/i/b/text()");
-                superAttackValueTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/section[3]/section[12]/table/tbody/tr/td[2]");
-                superAttackDistanceTextBox.Text = DataExtraction(htmlDocument, "/html/body/div[4]/div[3]/div[2]/main/div[3]/div[2]/div/aside/section[3]/div[1]/div");
-                featureTextBox.Text = DataExtraction(htmlDocument, "/html/body/div[4]/div[3]/div[2]/main/div[3]/div[2]/div/div[15]/i/b");
-                SpeedTextBox.Text = DataExtraction(htmlDocument, "//*[@id=\"mw-content-text\"]/div/aside/div[2]/div/text()[2]");
-            }
-        }
-
-        static string DataExtraction(HtmlDocument htmlDocument, string xpath)
-        {
-            var nodes = htmlDocument.DocumentNode.SelectNodes(xpath);
-
-            if (nodes != null)
-            {
-                // Обработка найденных элементов
-                foreach (var node in nodes)
-                {
-                    // Извлечение нужных данных из элементов
-                    var data = node.InnerText;
-                    data = Regex.Replace(data.Replace("\r", " ").Replace("\n", " "), @"\s+", " ").Trim(new char[] { '(', ')', '<', '>', '«', '»', ' ' } );
-                    // Дальнейшая обработка извлеченных данных
-                    return data;
-                }
-            }
-
-            return "";
-        }
-
+        // Форматирование ввода
         private string FormattingValue(TextBox textBox) => Regex.Replace(textBox.Text.Replace("\r", " ").Replace("\n", " "), @"\s+", " ").Trim();
 
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e) // Очищение полей
         {
             AddGrid.DataContext = new BrawlersDocument() { Stats = new Stats() };
-            healthTextBox.Text = "";
+            HealthTextBox.Text = "";
+            ImagePathTextBox.Text = "";
+            ImageIcoPathTextBox.Text = "";
+        }
+
+        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) // Смена фона
+        {
+            TabContolBG.ImageSource = null;
+            // Изменяем текущий индекс фона
+            currentBackgroundIndex++;
+            if (currentBackgroundIndex >= backgrounds.Length)
+            {
+                currentBackgroundIndex = 0;
+            }
+
+            // Присваиваем новое фоновое изображение PictureBox
+            TabControl.Background = backgrounds[currentBackgroundIndex];
+        }
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) // Открытие окна о персонаже
+        {
+            if (sender is Grid grid)
+            {
+                if (grid.FindName("NameBinding_TextBlock") is TextBlock textBlock)
+                {
+                    BrawlersDocument brawler = brawlers.FirstOrDefault(x => x.Name == textBlock.Text) ?? conceptBrawlers.FirstOrDefault(x => x.Name == textBlock.Text);
+                    Pers pers = new Pers(brawler);
+                    pers.Show();
+                }
+            }
+        }
+
+        private async void Image_MouseRightButtonDown(object sender, MouseButtonEventArgs e) // Удаление концепт-персонажа
+        {
+            // Находим родительский элемент Grid 
+            var element = sender as UIElement;
+            while (element != null && !(element is Grid))
+            {
+                element = VisualTreeHelper.GetParent(element) as UIElement;
+            }
+
+            var grid = element as Grid;
+            // Ищем в дочерних элементах TextBlock с именем NameBinding_TextBlock
+            var img = grid.FindName("pers") as Image;
+            // Если элемент найден, выводим его содержимое
+            if (grid.FindName("NameBinding_TextBlock") is TextBlock textBlock)
+            {
+                BrawlersDocument brawler = brawlers.FirstOrDefault(x => x.Name == textBlock.Text) ?? conceptBrawlers.FirstOrDefault(x => x.Name == textBlock.Text);
+                img.Source = null;
+                conceptBrawlers.Remove(brawler);
+                user.ConceptBrawlers.Remove(brawler.Name);
+                await brawlersManager.DeleteCharacterAsync(brawler.Name);
+                await imageConceptManager.DeleteImageAsync(brawler.Name);
+                await imageIcoConceptManager.DeleteImageAsync(brawler.Name);
+                await UserManager.ReplaceUserAsync(user);
+
+                conceptBrawlers.Remove(conceptBrawlers.FirstOrDefault(b => b.Name == brawler.Name));
+
+                ItemsContolList2.Resources.Clear();
+                ItemsContolList2.ItemsSource = null;
+                ItemsContolList2.ItemsSource = conceptBrawlers;
+
+                string path1 = Path.Combine(directoryPathImg, brawler.Name + ".png");
+                string path2 = Path.Combine(directoryPathIco, brawler.Name + ".png");
+
+                deletePath.Add(path1);
+                deletePath.Add(path2);
+            }
+        }
+
+        private void NameTextBox_LostFocus(object sender, RoutedEventArgs e) // Проверка на наличие персонажа с данным именем и заполенение его данными формы в случае истины
+        {
+            BrawlersDocument brawler = conceptBrawlers.FirstOrDefault(x => x.Name == nameTextBox.Text);
+            if (brawler != null) AddGrid.DataContext = brawler;
+
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e) // При смене вкладки
+        {
+            if (TabControl.SelectedIndex != 1)
+            {
+                foreach (var path in deletePath)
+                {
+                    try
+                    {
+                        File.Delete(path);
+                    }
+
+                    catch (Exception)
+                    {
+                        
+                    }
+                }
+            }
+        }
+
+        private void HealthTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e) // Проверка численного ввода в HealthTextBox
+        {
+            // Проверка, является ли введенный символ числом
+            if (!char.IsDigit(e.Text, e.Text.Length - 1))
+            {
+                // Предотвращение ввода символа, если это не число
+                e.Handled = true;
+            }
+
+            // Проверка, является ли введенный символ пробелом или пустым символом
+            else if (char.IsWhiteSpace(e.Text, e.Text.Length - 1) || string.IsNullOrWhiteSpace(e.Text))
+            {
+                // Предотвращение ввода пробела или пустого символа
+                e.Handled = true;
+            }
+        }
+
+        private void AddImage_Button_Click(object sender, RoutedEventArgs e) // Выбор изображения
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg)|*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                imgPath = openFileDialog.FileName;
+                ImagePathTextBox.Text = imgPath;
+            }
+        }
+
+        private void AddImageIco_Button_Click(object sender, RoutedEventArgs e) // Выбор изображения
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg)|*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                imgIcoPath = openFileDialog.FileName;
+                ImageIcoPathTextBox.Text = imgIcoPath;
+            }
         }
 
         // --------------------------------- Взаимодействие с окном --------------------------------------------
@@ -342,64 +405,14 @@ namespace GI
 
         private async void Window_Closed(object sender, EventArgs e) // Перед закрытием окна
 		{
+            user.ConceptBrawlers = conceptBrawlers.Select(b => b.Name).ToList();
 			await UserManager.ReplaceUserAsync(user);
-		}
+        }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e) // После отрисовки окна
         {
-            //await Anim.FadeInAsync(this, 1);
-            //await Anim.FadeInAsync(listBox1, 1);
-        }
-
-        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            TabContolBG.ImageSource = null;
-            // Изменяем текущий индекс фона
-            currentBackgroundIndex++;
-            if (currentBackgroundIndex >= backgrounds.Length)
-            {
-                currentBackgroundIndex = 0;
-            }
-
-            // Присваиваем новое фоновое изображение PictureBox
-            TabControl.Background = backgrounds[currentBackgroundIndex];
-        }
-
-        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Grid grid = sender as Grid;
-            if (grid != null)
-            {
-                TextBlock textBlock = grid.FindName("NameBinding_TextBlock") as TextBlock;
-                if (textBlock != null)
-                {
-                    BrawlersDocument brawler = brawlers.FirstOrDefault(x => x.Name == textBlock.Text);
-                    Pers pers = new Pers(brawler);
-                    pers.Show();
-                }
-            }
-        }
-
-        private void AddImage_Button_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg)|*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string filePath = openFileDialog.FileName;
-                ImagePathTextBox.Text = filePath;
-            }
-        }
-
-        private void AddImageIco_Button_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg)|*.png;*.jpeg;*.jpg;*.gif;*.bpm;*.raw;*.svg";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string filePath = openFileDialog.FileName;
-                ImageIcoPathTextBox.Text = filePath;
-            }
+            await Anim.FadeInAsync(this, 1);
+            await Anim.FadeInAsync(ItemsContolList, 1);
         }
     }
 }

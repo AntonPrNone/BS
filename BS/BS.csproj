@@ -215,7 +215,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Anim.cs" />
-    <Compile Include="PersInfo.xaml.cs">
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Wins\PersInfo.xaml.cs">
       <DependentUpon>PersInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Wins\Pers.xaml.cs">
@@ -224,7 +225,7 @@
     <Compile Include="Wins\RegWin.xaml.cs">
       <DependentUpon>RegWin.xaml</DependentUpon>
     </Compile>
-    <Page Include="PersInfo.xaml">
+    <Page Include="Wins\PersInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -341,6 +342,7 @@
     <Resource Include="imgs\iconAtack.png" />
     <Resource Include="imgs\iconHeart.png" />
     <Resource Include="imgs\icoFeature.png" />
+    <Resource Include="imgs\delete.png" />
     <Content Include="mongocrypt.dll" />
   </ItemGroup>
   <ItemGroup>

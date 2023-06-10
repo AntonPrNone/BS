@@ -51,9 +51,6 @@ namespace LogicLibrary
         [BsonIgnore]
         public string UploadDateString => UploadDate.ToString("dd.MM.yy HH:mm");
 
-        [BsonElement("favoriteСharacters")]
-        public string FavoriteСharacters { get; set; }
-
         public RarityPriority RarityPriority
         {
             get

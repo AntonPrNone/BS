@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI.Wins"
         mc:Ignorable="d"
-        WindowStyle="None" AllowsTransparency="True" Width="1200" Height="700" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowin.png" Closed="Window_Closed" Loaded="Window_Loaded" Title="Brawl Stars | Encyclopedia of Characters" ResizeMode="NoResize" MinWidth="1000" Top="1" KeyDown="Window_KeyDown">
+        WindowStyle="None" AllowsTransparency="True" Width="1200" Height="700" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowin.png" Loaded="Window_Loaded" Title="Brawl Stars | Encyclopedia of Characters" ResizeMode="NoResize" MinWidth="1000" Top="1" KeyDown="Window_KeyDown">
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
@@ -372,10 +372,6 @@
                             <TextBlock Text="Copyright © 2023 AntonPr" Foreground="White"/>
                             <TextBlock Text=" | " Foreground="White"/>
                             <TextBlock Text="Version 1.0.2" Foreground="White"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Cursor="Hand" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown">
-                            <Image Source="/imgs/iconReplace.png" Width="30" Height="30" Margin="0,0,-5,0"/>
-                            <Image Source="/imgs/iconImg.png" Width="40" Height="39" Margin="0,0,5,0"/>
                         </StackPanel>
                     </Grid>
                 </Border>

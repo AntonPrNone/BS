@@ -1,8 +1,10 @@
 ﻿using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace LogicLibrary
 {
@@ -38,19 +40,21 @@ namespace LogicLibrary
             _collection = _database.GetCollection<ImageDocument>(_collectionName);
         }
 
-        public async Task<bool> UploadImageAsync(string filename) // Загрузка в БД конкретное изображение
+        public async Task<bool> UploadImageAsync(string imgPath, string filename) // Загрузка в БД конкретное изображение
         {
-            filename = Path.ChangeExtension(filename, ".png");
-            var file = new FileInfo(Path.Combine(_directoryPath, filename));
-
-            if (file.Exists)
+            if (imgPath != null)
             {
-                var imageBytes = await Task.Run(() => File.ReadAllBytes(file.FullName));
-                var imageDocument = new ImageDocument(file.Name, imageBytes);
+                filename = Path.ChangeExtension(filename, ".png");
+                var file = new FileInfo(Path.Combine(imgPath, filename));
+
+                var imageBytes = await Task.Run(() => File.ReadAllBytes(imgPath));
+                var imageDocument = new ImageDocument(filename, imageBytes);
                 await _collection.InsertOneAsync(imageDocument);
+
+                return file.Exists;
             }
 
-            return file.Exists;
+            return false;
         }
 
         public async Task UploadImageAsync() // Загрузка в БД все изображения из папки (Не для пользовательского пользования, поэтому не нужна обработка исключения)
@@ -69,7 +73,7 @@ namespace LogicLibrary
 
         public async Task<bool> LoadImageFromDbAsync(string filename) // Загрузка из БД конкретное изображение
         {
-            filename = Path.ChangeExtension(filename, ".png");
+            filename = Path.ChangeExtension(filename, Path.GetExtension(filename));
 
             var filter = Builders<ImageDocument>.Filter.Eq("filename", filename);
             var document = await _collection.Find(filter).FirstOrDefaultAsync();
@@ -97,10 +101,9 @@ namespace LogicLibrary
         {
             var filename = document.Filename;
             var path = Path.Combine(_directoryPath, filename);
-            var pathEx = Path.Combine(_directoryPath, Path.ChangeExtension(filename, ".png"));
 
             // Проверяем, существует ли файл в папке
-            if (!File.Exists(pathEx))
+            if (!File.Exists(path))
             {
                 var bytes = document.ImageBytes;
                 await Task.Run(() => File.WriteAllBytes(path, bytes));
@@ -109,7 +112,7 @@ namespace LogicLibrary
 
         public async Task<bool> DeleteImageAsync(string filename) // Удаление из БД изображения коллекции
         {
-            var filter = Builders<ImageDocument>.Filter.Eq("filename", filename);
+            var filter = Builders<ImageDocument>.Filter.Eq(c => c.Filename, filename + ".png");
             var result = await _collection.DeleteOneAsync(filter);
 
             return result.DeletedCount != 0;

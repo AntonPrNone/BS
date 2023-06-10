@@ -125,6 +125,9 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Border Background="#3F00B3FF" CornerRadius="0,40,0,0">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="255"/>
+                    </Border.Effect>
                     <Grid Grid.Row="0" VerticalAlignment="Center" Height="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
